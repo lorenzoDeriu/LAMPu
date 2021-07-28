@@ -1,0 +1,15 @@
+extends layout
+
+block content 
+    h1= title
+    form(action='register' method='post')
+        label(for='username') Username
+        input(type='text' name='username')
+        br
+        label(for='email') E-mail 
+        input(type='text' name='email')
+        br
+        label(for='password') Password
+        input(type='text' name='password')
+        br
+        input(type='submit' value='Register')
