@@ -10,17 +10,10 @@ module.exports = {
 		}
 	},
 
-	MissingInfoError: class extends Error {
-		constructor() {
-			super();
-			this.description = 'queryBuilder() received no parameters.';
-		}
-	},
-
 	queryBuilder: function(options) {
 		if(options == undefined || options == "" || options == " ") throw new MissingInfoError();
 
-		if(typeof options == 'string')
+		if(options.constructor === 'string')
 			return 'https://www.googleapis.com/books/v1/volumes?q=' + standardizeString(options);
 		else {
 			var query = 'https://www.googleapis.com/books/v1/volumes?q=';
@@ -33,6 +26,13 @@ module.exports = {
 
 			return query;
 		}
+	}
+}
+
+class MissingInfoError extends Error {
+	constructor() {
+		super();
+		this.description = 'queryBuilder() received no parameters.';
 	}
 }
 

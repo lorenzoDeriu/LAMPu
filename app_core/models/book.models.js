@@ -43,13 +43,9 @@ class BookShelves {
 	}
 
 	async foundByISBN(isbn) {
-		var query = Query.queryBuilder(new Query.Options(isbn));
+		var query = Query.queryBuilder(new Query.Options({"isbn": isbn, "inauthor":null, "intitle":null}));
 		var response = await Google_Books.getInfo(query);
+		response.data = this.BookParser(response.data);
 		return response;
 	}
 }
-
-var bs = new BookShelves()
-bs.create({"isbn": null, "inauthor":null, "intitle":"shining"}).then(() => {
-	console.log(bs.book)
-})
