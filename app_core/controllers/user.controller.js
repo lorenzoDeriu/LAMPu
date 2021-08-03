@@ -3,6 +3,7 @@ const User = require("../models/user.model.js");
 // Create and Save a new user
 exports.create = (req, res) => {
     if (!req.body) {
+        console.log('Error: Content can not be empty!');
         res.status(400).send({
             message: "Content can not be empty!"
         });
@@ -14,16 +15,17 @@ exports.create = (req, res) => {
         email: req.body.email,
         password: req.body.password,
         name: req.body.name,
-        surname: req.body.surname,
-        date: formatDate(new Date())
+        subscription: formatDate(new Date())
     });
-
+    console.log(user);
     User.create(user, (err, data) => {
         if (err) {
+            console.log(err);
             res.status(500).send({
                 message: err.message || "Some error occurred while creating the user."
             });
         } else {
+            console.log('user created');
             res.send(data);
         }
     });
@@ -97,16 +99,76 @@ exports.delete = (req, res) => {
             } else {
                 res.status(500).send({
                     message: "Could not delete user with username " + req.params.username
-                })
+                });
             }
         } else {
             res.send({ message: `User deleted!`});
         }
-    })
+    });
 };
+
+exports.toReadList = (req, res) => {
+    User.getToReadList(req.user.username, (err, data) => {
+        if (err) {
+            if (err.kind === "empty_list") {
+                res.render('toread', {
+                    name: req.user.name,
+                    message: 'No books in the list'
+                });
+            } else {
+                res.status(500).send({
+                    message: err.message || "Some error occurred while retrieving the list."
+                });
+            }
+        } else {
+            res.render('toread', { 
+                name: req.user.name,
+                list: data
+            });
+        }
+    });
+};
+
+exports.readBooksList = (req, res) => {
+    User.getReadBooksList(req.user.username, (err, data) => {
+        if (err) {
+            if (err.kind === "empty_list") {
+                res.render('readbooks', {
+                    name: req.user.name,
+                    message: 'No books in the list'
+                });
+            } else {
+                res.status(500).send({
+                    message: err.message || "Some error occurred while retrieving the list."
+                });
+            }
+        } else {
+            res.render('readbooks', { 
+                name: req.user.name,
+                list: data
+            });
+        }
+    });
+};
+
+exports.addBookToRead = (req, res) => {
+    User.addBookToReadByIsbn(req.user.username, req.body.isbn, (err, data) => {
+        if (err) {
+            res.status(500).send({
+                message: err.message || "Some error occurred while adding the book to the list."
+            });
+        } else {
+            res.render('toread', {
+                name: req.user.name,
+                message: "Book added to the list",
+                refreshButton: true
+            });
+        }
+    })
+}
 
 /* https://stackoverflow.com/questions/44493088/format-a-date-string-in-javascript */
 function formatDate(userDate) {
     // format from M/D/YYYY to YYYYMMDD
-    return (new Date(userDate).toJSON().slice(0,10).split('-').reverse().join('-'));
+    return (new Date(userDate).toJSON().slice(0,10).split('-').join('-'));
 }

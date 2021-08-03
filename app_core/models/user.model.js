@@ -10,8 +10,7 @@ const User = function(user) {
     this.email = user.email;
     this.password = user.password;
     this.name = user.name;
-    this.surname = user.surname;
-    this.date = user.date;
+    this.subscription = user.subscription;
 };
 
 User.create = (newUser, result) => {
@@ -27,14 +26,14 @@ User.create = (newUser, result) => {
 };
 
 User.findById = (username, result) => {
-    db.query(`SELECT * FROM USERS WHERE Username = ${username}`, (err, res) => {
+    db.query(`SELECT * FROM USERS WHERE Username = "${username}"`, (err, res) => {
         if (err) {
             console.log("error: ", err);
             result(err, null);
             return;
         }
         if (res.length) {
-            console.log("user found: ", res[0]);
+            console.log("user found");
             result(null, res[0]);
             return;
         }
@@ -45,14 +44,14 @@ User.findById = (username, result) => {
 
 
 User.findByEmail = (email, result) => {
-    db.query(`SELECT * FROM USERS WHERE Email = ${email}`, (err, res) => {
+    db.query(`SELECT * FROM USERS WHERE Email = "${email}"`, (err, res) => {
         if (err) {
             console.log("error: ", err);
             result(err, null);
             return;
         }
         if (res.length) {
-            console.log("user found: ", res[0]);
+            console.log("user found");
             result(null, res[0]);
             return;
         }
@@ -69,7 +68,7 @@ User.getAll = (result) => {
             return;
         }
         if (res.length) {
-            console.log(`${res.length} users: `, res);
+            console.log(`${res.length} users`);
             result(null, res);
             return;
         }
@@ -79,8 +78,8 @@ User.getAll = (result) => {
 };
 
 User.updateById = (username, user, result) => {
-    db.query("UPDATE USERS SET Password = ?, Email = ?, Name = ?, Surname = ?, Username = ? WHERE Username = ?", 
-        [user.password, user.email, user.name, user.surname, user.username, username], 
+    db.query("UPDATE USERS SET Password = ?, Email = ?, Name = ?, Username = ? WHERE Username = ?", 
+        [user.password, user.email, user.name, user.username, username], 
         (err, res) => {
             if (err) {
                 console.log("error: ", err);
@@ -117,5 +116,73 @@ User.removeById = (username, result) => {
         });
 };
 
+User.getToReadList = (username, result) => {
+    console.log('retrieving to read list for user ' + username);
+    db.query("SELECT ISBN FROM TO_READ WHERE Username = ?",
+        username,
+        (err, res) => {
+            if (err) {
+                console.log("error: " + err);
+                result(err, null);
+                return;
+            }
+            if (res.length === 0) {
+                console.log(`user ${username}'s to read list is empty`);
+                result({ kind: "empty_list" }, null);
+                return;
+            }
+            console.log(`user ${username}'s to read list retrieved`);
+            result(null, res);
+        });
+};
+
+User.getReadBooksList = (username, result) => {
+    console.log('retrieving read books list for user ' + username);
+    db.query("SELECT ISBN FROM READ_BOOKS WHERE Username = ?",
+        username,
+        (err, res) => {
+            if (err) {
+                console.log("error: " + err);
+                result(err, null);
+                return;
+            }
+            if (res.length === 0) {
+                console.log(`user ${username}'s read books list is empty`);
+                result({ kind: "empty_list" }, null);
+                return;
+            }
+            console.log(`user ${username}'s read books list retrieved`);
+            result(null, res);
+        });
+};
+
+User.addBookToReadByIsbn = (username, isbn, result) => {
+    console.log(`username: ${username}, isbn: ${isbn}`);
+    db.query("INSERT INTO TO_READ(ISBN, Username) VALUES(?,?)",
+        [isbn, username],
+        (err, res) => {
+            if (err) {
+                console.log("error: " + err);
+                result(err, null);
+                return;
+            }
+            console.log(`book ${isbn} added to ${username}'s to read list`);
+            result(null, res);
+        });
+};
+
+User.addReadBookByIsbn = (username, isbn, result) => {
+    db.query("INSERT INTO READ_BOOKS(ISBN, Username) VALUES(?,?)",
+    [isbn, username],
+    (err, res) => {
+        if (err) {
+            console.log("error: " + err);
+            result(err, null);
+            return;
+        }
+        console.log(`book ${isbn} added to ${username}'s read books list`);
+        result(null, res);
+    });
+};
 
 module.exports = User;

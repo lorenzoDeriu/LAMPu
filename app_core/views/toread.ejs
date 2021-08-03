@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <title>To Read</title>
+</head>
+<body>
+    <h1><%=name%>'s books to read</h1>
+    <% if (typeof message !== 'undefined') { %>
+        <p><%= message %></p>
+    <% } %>
+    <% if (typeof list !== 'undefined') { %>
+        <% for (book of list) { %>
+            <p><%=book.ISBN%></p>
+        <% } %>
+    <% } %>
+    <% if (typeof refreshButton !== 'undefined') { %>
+        <a href="/toread">Refresh list</a>
+    <% } %>
+    <form action="/toread/add" method="post">
+        <h3>Add book to the list:</h3>
+        <label for="isbn">isbn</label>
+        <input type="text" name="isbn" id="isbn">
+        <button type="submit">Add</button>
+    </form>
+    <br/>
+    <form action="/logout?_method=DELETE" method="POST">
+        <button type="submit">Log Out</button>
+    </form>
+</body>
+</html>

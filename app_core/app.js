@@ -1,20 +1,34 @@
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
+
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var methodOverride = require('method-override');
+
+// passport
+var passport = require('passport');
+var flash = require('express-flash');
+var session = require('express-session');
+var initPassport = require('./config/passport.config');
+initPassport(passport);
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var userLogin = require('./routes/login');
 var registerUser = require('./routes/register');
 var booksCategories = require('./routes/categories');
+var userToRead = require('./routes/toread');
+var logout = require('./routes/logout');
 
 var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
+app.set('view engine', 'ejs');
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -22,11 +36,23 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(flash());
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(methodOverride('_method'));
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/login', userLogin);
 app.use('/register', registerUser);
 app.use('/categories', booksCategories);
+app.use('/toread', userToRead);
+app.use('/logout', logout);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
