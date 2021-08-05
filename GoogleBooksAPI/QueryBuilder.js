@@ -13,7 +13,7 @@ module.exports = {
 	queryBuilder: function(options) {
 		if(options == undefined || options == "" || options == " ") throw new MissingInfoError();
 
-		if(options.constructor === 'string')
+		if(typeof options == 'string')
 			return 'https://www.googleapis.com/books/v1/volumes?q=' + standardizeString(options);
 		else {
 			var query = 'https://www.googleapis.com/books/v1/volumes?q=';

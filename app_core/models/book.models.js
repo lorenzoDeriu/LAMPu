@@ -28,7 +28,7 @@ class BookShelves {
 		return array;
 	}
 
-	async create(settings) { //settings: string -•- settings: [isbn, author, title]
+	async create(settings) { //settings: string -•- settings: {"isbn": isbn, "inauthor": author, "intitle": title}
 		var query;
 
 		if(settings.constructor === Object) query = Query.queryBuilder(new Query.Options(settings)); // advanced search
@@ -38,7 +38,7 @@ class BookShelves {
 		var response = await Google_Books.getInfo(query);
 
 		if(response.err)
-			throw new response.err;
+			throw response.err;
 		else this.book = this.BookParser(response.data)
 	}
 
@@ -49,3 +49,9 @@ class BookShelves {
 		return response;
 	}
 }
+
+var a = new BookShelves();
+
+a.create("homo deus").then(() => {
+	console.log(a.book);
+});
