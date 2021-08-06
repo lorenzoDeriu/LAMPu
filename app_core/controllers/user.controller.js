@@ -4,7 +4,7 @@ const User = require("../models/user.model.js");
 exports.create = (req, res) => {
     if (!req.body) {
         console.log('Error: Content can not be empty!');
-        res.status(400).send({
+        res.status(400).render('error', {
             message: "Content can not be empty!"
         });
     }
@@ -21,9 +21,26 @@ exports.create = (req, res) => {
     User.create(user, (err, data) => {
         if (err) {
             console.log(err);
-            res.status(500).send({
-                message: err.message || "Some error occurred while creating the user."
-            });
+            if (err.code === 'ER_DUP_ENTRY') {
+                if (err.sqlMessage.indexOf('PRIMARY') >= 0) {
+                    res.render('register', {
+                        title: 'Register',
+                        error: err,
+                        message: "Username already in use"
+                    });
+                } else {
+                    res.render('register', {
+                        title: 'Register',
+                        error: err,
+                        message: "E-mail already in use"
+                    });
+                }
+            } else {
+                res.status(500).render('error', {
+                    error: err,
+                    message: err.message || "Some error occurred while creating the user."
+                });
+            }
         } else {
             console.log('user created');
             res.send(data);
@@ -35,7 +52,8 @@ exports.create = (req, res) => {
 exports.findAll = (req, res) => {
     User.getAll( (err, data) => {
         if (err) {
-            res.status(500).send({
+            res.status(500).render('error', {
+                error: err,
                 message: err.message || "Some error occurred while retrieving all the users."
             });
         } else {
@@ -48,12 +66,15 @@ exports.findAll = (req, res) => {
 exports.findOne = (req, res) => {
     User.findById(req.params.username, (err, data) => {
         if (err) {
+          console.log('erroreeeeeeeee');
           if (err.kind === "not_found") {
-            res.status(404).send({
+            res.status(404).render('error', {
+                error: err,
                 message: `Not found user with username ${req.params.username}.`
             });
           } else {
             res.status(500).send({
+                error: err,
                 message: "Error retrieving user with username " + req.params.username
             });
           }
@@ -64,7 +85,7 @@ exports.findOne = (req, res) => {
 // Update a user identified by the username in the request
 exports.update = (req, res) => {
     if (!req.body) {
-        res.status(400).send({
+        res.status(400).render('error', {
             message: "Content can not be empty!"
         });
     }
@@ -74,11 +95,13 @@ exports.update = (req, res) => {
         (err, data) => {
             if (err) {
                 if (err.kind === "not_found") {
-                    res.status(404).send({
+                    res.status(404).render('error', {
+                        error: err,
                         message: `Not found user with username ${req.params.username}.`
                     });
                 } else {
-                    res.status(500).send({
+                    res.status(500).render('error', {
+                        error: err,
                         message: "Error updating user with username " + req.params.username
                     });
                 }
@@ -93,11 +116,13 @@ exports.delete = (req, res) => {
     User.removeById(req.params.username, (err, data) => {
         if (err) {
             if (err.kind === "not_found") {
-                res.status(404).send({
+                res.status(404).render('error', {
+                    error: err,
                     message: `Not found user with username ${req.params.username}.`
                 });
             } else {
-                res.status(500).send({
+                res.status(500).render('error', {
+                    error: err,
                     message: "Could not delete user with username " + req.params.username
                 });
             }
@@ -116,7 +141,8 @@ exports.toReadList = (req, res) => {
                     message: 'No books in the list'
                 });
             } else {
-                res.status(500).send({
+                res.status(500).render('error', {
+                    error: err,
                     message: err.message || "Some error occurred while retrieving the list."
                 });
             }
@@ -138,7 +164,8 @@ exports.readBooksList = (req, res) => {
                     message: 'No books in the list'
                 });
             } else {
-                res.status(500).send({
+                res.status(500).render('error', {
+                    error: err,
                     message: err.message || "Some error occurred while retrieving the list."
                 });
             }
@@ -154,7 +181,8 @@ exports.readBooksList = (req, res) => {
 exports.addBookToRead = (req, res) => {
     User.addBookToReadByIsbn(req.user.username, req.body.isbn, (err, data) => {
         if (err) {
-            res.status(500).send({
+            res.status(500).render('error', {
+                error: err,
                 message: err.message || "Some error occurred while adding the book to the list."
             });
         } else {

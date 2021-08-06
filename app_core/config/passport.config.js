@@ -8,7 +8,7 @@ function initialize(passport) {
         await new Promise((resolve, reject) => {
             User.findById(username, (err, data) => {
                 if (err)
-                    return done(err, false, { message: 'No user with that username' });
+                    return done(null, false, { message: 'No user with that username' });
                 else {
                     user = data;
                     resolve();
