@@ -6,7 +6,10 @@ module.exports = {
 	getInfo: async function(query) {
 		let response = await fetch(query)
 		if(!response.ok) 
-			return {"err": new Error("HTTP error status " + response.status), "data": null};
+			return {
+				"err": { "status": response.status },
+				"data": null
+			};
 
 		let book = await response.json();
 		return {"err": null, "data": book.items};

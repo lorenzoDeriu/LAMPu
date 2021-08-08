@@ -1,57 +1,62 @@
 const Query = require("../../GoogleBooksAPI/QueryBuilder.js");
 const Google_Books = require("../../GoogleBooksAPI/SearchInfoBooks.js");
 
-class Book {
-	constructor(obj) { //obj: response.body.items[i];
-		this.title = obj.volumeInfo.title;
-		this.authors = obj.volumeInfo.authors;
-		this.publisher = obj.volumeInfo.publisher;
-		this.publishedDate = obj.volumeInfo.publishedDate;
-		this.categories = obj.volumeInfo.categories;
-		this.isbn = obj.volumeInfo.industryIdentifiers
-		this.thumbnail = obj.volumeInfo.imageLinks;
-		this.language = obj.volumeInfo.language;
-		this.description = obj.volumeInfo.description;
-	}	
-}
+module.exports = {
+	Book: class {
+		constructor(obj) { //obj: response.body.items[i];
+			this.title = obj.volumeInfo.title;
+			this.authors = obj.volumeInfo.authors;
+			this.publisher = obj.volumeInfo.publisher;
+			this.publishedDate = obj.volumeInfo.publishedDate;
+			this.categories = obj.volumeInfo.categories;
+			this.isbn = obj.volumeInfo.industryIdentifiers
+			this.thumbnail = obj.volumeInfo.imageLinks;
+			this.language = obj.volumeInfo.language;
+			this.description = obj.volumeInfo.description;
+		}	
+	},
 
-class BookShelves {
-	constructor() {
-		this.book = [];
-	}
-
-	BookParser(rowBooksArray) {
-		var array = [];
-		for(let rowBook of rowBooksArray)
-			array.push(new Book(rowBook));
-
-		return array;
-	}
-
-	async create(settings) { //settings: string -•- settings: {"isbn": isbn, "inauthor": author, "intitle": title}
+	create: async function(settings) { //settings: string -•- settings: {"isbn": isbn, "inauthor": author, "intitle": title}
 		var query;
 
 		if(settings.constructor === Object) query = Query.queryBuilder(new Query.Options(settings)); // advanced search
 		else query = Query.queryBuilder(settings); // generic search
 
-		console.log(query)
-		var response = await Google_Books.getInfo(query);
+		response = await Google_Books.getInfo(query);
 
 		if(response.err)
-			throw response.err;
-		else this.book = this.BookParser(response.data)
+			return response;
+		else response.data = this.bookParser(response.data);
+
+		return response;
+	},
+
+	foundByISBN: async function(isbn) {
+		var query = Query.queryBuilder(new Query.Options({"isbn": isbn, "inauthor": null, "intitle": null}));
+		var response = await Google_Books.getInfo(query);
+		response.data = this.bookParser(response.data);
+		return response;
+	},
+
+	getInfoOfList: async function(isbnList) { // to rm
+		var booksList = [];
+
+		for(let index = 0; index < isbnList.length; index++) {
+			let newBook = await this.foundByISBN(isbnList[index])
+			if(!newBook.err)
+				booksList.push(newBook.data);
+		}
+		return booksList;
+	},
+
+	bookParser: function(rowBooksArray) {
+		var array = [];
+		for(let rowBook of rowBooksArray)
+			array.push(new this.Book(rowBook));
+		return array;
 	}
 
-	async foundByISBN(isbn) {
-		var query = Query.queryBuilder(new Query.Options({"isbn": isbn, "inauthor":null, "intitle":null}));
-		var response = await Google_Books.getInfo(query);
-		response.data = this.BookParser(response.data);
-		return response;
-	}
 }
 
-var a = new BookShelves();
 
-a.create("homo deus").then(() => {
-	console.log(a.book);
-});
+
