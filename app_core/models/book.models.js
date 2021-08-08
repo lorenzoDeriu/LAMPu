@@ -38,17 +38,6 @@ module.exports = {
 		return response;
 	},
 
-	getInfoOfList: async function(isbnList) { // to rm
-		var booksList = [];
-
-		for(let index = 0; index < isbnList.length; index++) {
-			let newBook = await this.foundByISBN(isbnList[index])
-			if(!newBook.err)
-				booksList.push(newBook.data);
-		}
-		return booksList;
-	},
-
 	bookParser: function(rowBooksArray) {
 		var array = [];
 		for(let rowBook of rowBooksArray)
