@@ -3,6 +3,7 @@
  */
 
 const db = require('./db');
+const googleBooks = require('./book.models');
 
 // Constructor
 const User = function(user) { 
@@ -118,7 +119,12 @@ User.removeById = (username, result) => {
 
 User.getToReadList = (username, result) => {
     console.log('retrieving to read list for user ' + username);
-    db.query("SELECT ISBN FROM TO_READ WHERE Username = ?",
+    var t0 = performance.now();
+    db.query(`SELECT B.ISBN, title, publisher, publishedDate, language, author, category
+        FROM TO_READ TR, BOOKS B, CATEGORIES C, AUTHORS A 
+        WHERE Username = ? AND TR.ISBN = B.ISBN
+        AND C.ISBN = B.ISBN AND A.ISBN = B.ISBN
+        ORDER BY B.ISBN`,
         username,
         (err, res) => {
             if (err) {
@@ -132,8 +138,35 @@ User.getToReadList = (username, result) => {
                 return;
             }
             console.log(`user ${username}'s to read list retrieved`);
-            result(null, res);
+            var isbn = null;
+            var list = [];
+            var currentBook = null;
+            for (row of res) {
+                if (row.ISBN !== isbn) {
+                    list.push(currentBook);
+                    isbn = row.ISBN;
+                    currentBook = {
+                        isbn: isbn,
+                        title: row.title,
+                        authors: [row.author],
+                        publisher: row.publisher,
+                        publishedDate: row.publishedDate,
+                        categories: [row.category],
+                        thumbnail: null,
+                        language: language
+                    };
+                } else {
+                    if (!currentBook.authors.includes(row.author))
+                        currentBook.authors.push(row.author);
+                    if (!currentBook.categories.includes(row.category))
+                        currentBook.categories.push(row.category);
+                }
+            }
+            result(null, list);
         });
+
+        var t1 = performance.now();
+        console.log('execution time: ' + (t1-t0) + 'milliseconds.');
 };
 
 User.getReadBooksList = (username, result) => {
@@ -158,17 +191,38 @@ User.getReadBooksList = (username, result) => {
 
 User.addBookToReadByIsbn = (username, isbn, result) => {
     console.log(`username: ${username}, isbn: ${isbn}`);
-    db.query("INSERT INTO TO_READ(ISBN, Username) VALUES(?,?)",
-        [isbn, username],
-        (err, res) => {
-            if (err) {
-                console.log("error: " + err);
-                result(err, null);
-                return;
-            }
-            console.log(`book ${isbn} added to ${username}'s to read list`);
-            result(null, res);
-        });
+
+    googleBooks.foundByISBN(isbn).then( (err, book) => {
+        if (err) {
+            console.log('error' + err);
+            result(err, null);
+            return;
+        } else {
+
+            //inserimento libro in books
+            db.query('INSERT INTO BOOKS(ISBN, title, publisher, publisher')
+
+            //inserimento isbn e username in to_read
+            db.query("INSERT INTO TO_READ(ISBN, Username) VALUES(?,?)",
+            [isbn, username],
+            (err, res) => {
+                if (err) {
+                    console.log("error: " + err);
+                    result(err, null);
+                    return;
+                }
+                console.log(`book ${isbn} added to ${username}'s to read list`);
+                result(null, res);
+            });
+
+            //inserimento autori
+
+            //inserimento categorie
+
+            //inserimento thumbnails
+            
+        }
+    });
 };
 
 User.addReadBookByIsbn = (username, isbn, result) => {
