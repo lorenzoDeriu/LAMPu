@@ -25,22 +25,20 @@ module.exports = {
 				query += "intitle:" + options.intitle;
 
 			return query;
-		},
-
-		MissingInfoError: class extends Error {
-			constructor() {
-				super();
-				this.description = 'queryBuilder() received no parameters.';
-			}
-		},
-
-		standardizeString: function(str) {
-			if(str != null) return str.split(" ").join("+");
-			return null;
 		}
+	},
+
+	MissingInfoError: class extends Error {
+		constructor() {	
+			super();
+			this.description = 'queryBuilder() received no parameters.';
+		}
+	},
+
+	standardizeString: function(str) {
+		if(str != null) return str.split(" ").join("+");
+		return null;
 	}
 }
-
-
 
 

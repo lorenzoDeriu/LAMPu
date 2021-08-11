@@ -34,7 +34,7 @@ module.exports = {
 		Book.foundByISBN(request.body.isbn).then((res) => {
 			if(res.err)
 				response.status(res.err.status).render('error', {
-					"message": "HTTP error status" + res.err.status;
+					"message": "HTTP error status" + res.err.status
 				})
 
 			response.status(200).render('infoBook_page',{
