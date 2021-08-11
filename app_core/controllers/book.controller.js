@@ -3,7 +3,7 @@ const Book = require("../models/book.models.js")
 module.exports = {
 	search: function(request, response) {
 		if(!request.body) {
-			response.status(400).send({
+			response.status(400).render('error', {
 				"message": "content can not be empty",
 			})
 			return;
@@ -25,7 +25,7 @@ module.exports = {
 
 	viewInfoBook: function(request, response) {
 		if(!request.body) {
-			response.status(400).send({
+			response.status(400).render('error', {
 				"message": "content can not be empty",
 			})
 			return;
@@ -33,7 +33,7 @@ module.exports = {
 
 		Book.foundByISBN(request.body.isbn).then((res) => {
 			if(res.err)
-				response.status(res.err.status).send({
+				response.status(res.err.status).render('error', {
 					"message": "HTTP error status" + res.err.status;
 				})
 
