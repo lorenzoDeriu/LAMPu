@@ -14,7 +14,7 @@
     <% } %>
     <% if (typeof list !== 'undefined') { %>
         <% for (book of list) { %>
-            <p><%=book.ISBN%></p>
+            <p><%=book.isbn + ' - ' + book.title%></p>
         <% } %>
     <% } %>
     <% if (typeof refreshButton !== 'undefined') { %>

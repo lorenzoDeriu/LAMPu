@@ -1,5 +1,5 @@
-const Query = require("../../GoogleBooksAPI/QueryBuilder.js");
-const Google_Books = require("../../GoogleBooksAPI/SearchInfoBooks.js");
+const Query = require("../googleBooks/QueryBuilder");
+const Google_Books = require("../googleBooks/SearchInfoBooks");
 
 module.exports = {
 	Book: class {
