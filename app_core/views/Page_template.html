@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <head>
+      <title> LAMbooksDB </title>
+      <link rel="icon" href="icon_website.png">
+      <link rel="stylesheet" href="Page_template_style.css">
+   </head>
+
+   <body>
+      <div id="header">
+         <span onclick="openNav()">
+            <div class="menu_icon">
+               <div class="line"></div>
+               <div class="line"></div>
+               <div class="line"></div>
+            </div>
+            <script>
+               function closeNav() {
+                  document.getElementById("Sidebar_menu").style.width = "0";
+                  document.getElementById("main").style.marginLeft = "0";
+                  document.body.style.backgroundColor = "#403C3C";
+               }
+            </script>
+         </span>
+         <div id="title"> LAMbooksDB </div>
+      </div>
+
+      <div id="Sidebar_menu" class="sidenav">
+         <a href="javascript:void(0)" class="close_menu" onclick="closeNav()">&times;</a>
+         <script>
+            function openNav() {
+               document.getElementById("Sidebar_menu").style.width = "15%";
+               document.getElementById("main").style.marginLeft = "10%";
+               document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
+            }
+         </script>
+         <a href="Read.html"> Read </a>
+         <a href="My_List.html"> My List </a>
+         <a href="Suggested.html"> Suggested </a>
+         <a href="Categories.html"> Categories </a>
+            <a href="#" class="literary_genres"> Giallo </a>
+            <a href="#" class="literary_genres"> Rosa </a>
+            <a href="#" class="literary_genres"> Saggistica </a>
+            <a href="#" class="literary_genres"> Favole </a>
+            <a href="#" class="literary_genres"> Horror </a>
+            <a href="#" class="literary_genres"> Azione </a>
+            <a href="#" class="literary_genres"> Avventura </a>
+            <a href="#" class="literary_genres"> Biografia </a>
+            <a href="#" class="literary_genres"> Autobiografia </a>
+            <a href="#" class="literary_genres"> Storico </a>
+      </div>
+   </body>
+</html>
