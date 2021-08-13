@@ -227,3 +227,130 @@ label {
 		transform: translate(0,-1em) rotate(-180deg) translate(7.5em,-0.25em);
 	}
 }
+
+.gallery {
+	margin-top: 10%;
+	display: grid;
+	grid-template-rows: repeat(5, 18vh);
+	grid-template-columns: repeat(2, 45vw);
+	transition: all 0.3s cubic-bezier(0.5, 0.8, 0.5, 0.2);
+	background-color: #403C3C;
+	border-radius: 10px;
+	border: 0.5px solid #111;
+	padding: 0.25em;
+	cursor: zoom-in;
+ }
+ @media (min-width: 40em) {
+	.gallery {
+	  grid-template-rows: repeat(2, 20vh);
+	}
+ }
+ @media (min-width: 10em) and (orientation: landscape) {
+	.gallery {
+	  grid-template-columns: repeat(5, 18vw);
+	  grid-template-rows: repeat(2, 45vh);
+	}
+ }
+ @media (min-width: 60em) {
+	.gallery {
+	  grid-template-columns: repeat(10, 8vw);
+	  grid-template-rows: 25vh;
+	}
+ }
+ 
+ img {
+	object-fit: cover;
+	width: 100%;
+	height: 100%;
+	left: 0;
+	top: 0;
+	transition: all 0.15s cubic-bezier(0.3, 0.1, 0.3, 0.85);
+	position: relative;
+	box-shadow: 0 0 0 #0000;
+	opacity: 0.67;
+	filter: sepia(80%) hue-rotate(180deg);
+ }
+ img:first-child {
+	border-radius: 10px 10px 0 0;
+ }
+ img:last-child {
+	border-radius: 0 0 10px 10px;
+ }
+ @media (min-width: 40em) and (max-width: 59.99em) {
+	img:first-child {
+	  border-radius: 10px 0 0 0;
+	}
+	img:nth-child(5) {
+	  border-radius: 0 10px 0 0;
+	}
+	img:nth-child(6) {
+	  border-radius: 0 0 10px 0;
+	}
+	img:last-child {
+	  border-radius: 0 0 0 10px;
+	}
+ }
+ @media (min-width: 60em) {
+	img:first-child {
+	  border-radius: 10px 0 0 10px;
+	}
+	img:last-child {
+	  border-radius: 0 10px 10px 0;
+	}
+ }
+ img:hover {
+	opacity: 1;
+	z-index: 1;
+	box-shadow: 1em 1em 1em #0004;
+	transition: all 0.3s cubic-bezier(0.3, 0.1, 0.3, 0.85);
+	filter: sepia(0%) hue-rotate(0deg);
+	border-radius: 5px;
+	width: 300%;
+	height: 300%;
+	left: -100%;
+	top: -100%;
+ }
+ @media (min-width: 40em) {
+	img:hover {
+	  width: 250%;
+	  height: 500%;
+	  left: -75%;
+	  top: -200%;
+	}
+ }
+ @media (min-width: 10em) and (orientation: landscape) {
+	img:hover {
+	  width: 250%;
+	  height: 200%;
+	}
+ }
+ @media (min-width: 40em) and (orientation: portrait) {
+	img:hover {
+	  width: 300%;
+	  height: 300%;
+	  left: -100%;
+	  top: -100%;
+	}
+ }
+ @media (min-width: 60em) {
+	img:hover {
+	  width: 350%;
+	  height: 150%;
+	  left: -75%;
+	  top: -25%;
+	}
+	img:hover ~ img {
+	  left: 175%;
+	}
+ }
+ @media (min-width: 60em) and (orientation: landscape) {
+	img:hover {
+	  width: 300%;
+	  height: 300%;
+	  left: -75%;
+	  top: -100%;
+	}
+	img:hover ~ img {
+	  left: 100%;
+	}
+ }
