@@ -39,6 +39,8 @@ module.exports = {
 	},
 
 	bookParser: function(rowBooksArray) {
+		if(rowBooksArray.length == 0) return null;
+
 		var array = [];
 		for(let rowBook of rowBooksArray)
 			array.push(new this.Book(rowBook));
