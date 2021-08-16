@@ -1,18 +1,6 @@
-const mysql = require('mysql');
-const dbConfig = require('../config/db.config');
+const mongoose = require('mongoose');
+const db = require('../config/db.config').MongoURI;
 
-// Create a connection
-const connection = mysql.createConnection({
-    host: dbConfig.HOST,
-    user: dbConfig.USER,
-    password: dbConfig.PASSWORD,
-    database: dbConfig.DB
-});
-
-// Open the connection
-connection.connect( (err) => {
-    if (err) throw err;
-    console.log('Connected to MySql database.');
-});
-
-module.exports = connection;
+mongoose.connect(db, { useNewUrlParser: true})
+    .then(() => console.log('MongoDB connected...'))
+    .catch(err => console.log(err));
