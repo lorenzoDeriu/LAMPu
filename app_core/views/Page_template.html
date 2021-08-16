@@ -36,19 +36,35 @@
             }
          </script>
          <a href="Read.html"> Read </a>
-         <a href="My_List.html"> My List </a>
+         <a href="/toread"> My List </a>
          <a href="Suggested.html"> Suggested </a>
-         <a href="Categories.html"> Categories </a>
-            <a href="#" class="literary_genres"> Giallo </a>
-            <a href="#" class="literary_genres"> Rosa </a>
-            <a href="#" class="literary_genres"> Saggistica </a>
-            <a href="#" class="literary_genres"> Favole </a>
-            <a href="#" class="literary_genres"> Horror </a>
-            <a href="#" class="literary_genres"> Azione </a>
-            <a href="#" class="literary_genres"> Avventura </a>
-            <a href="#" class="literary_genres"> Biografia </a>
-            <a href="#" class="literary_genres"> Autobiografia </a>
-            <a href="#" class="literary_genres"> Storico </a>
+         <a href="#" class="categories_dropdown closed" onclick="dropdown()"> Categories </a>
+            <a href="#" class="literary_genres hidden"> Giallo </a>
+            <a href="#" class="literary_genres hidden"> Rosa </a>
+            <a href="#" class="literary_genres hidden"> Saggistica </a>
+            <a href="#" class="literary_genres hidden"> Favole </a>
+            <a href="#" class="literary_genres hidden"> Horror </a>
+            <a href="#" class="literary_genres hidden"> Azione </a>
+            <a href="#" class="literary_genres hidden"> Avventura </a>
+            <a href="#" class="literary_genres hidden"> Biografia </a>
+            <a href="#" class="literary_genres hidden"> Autobiografia </a>
+            <a href="#" class="literary_genres hidden"> Storico </a>
+         <script>
+            function dropdown() {
+               var menu = document.querySelector('.categories_dropdown');
+               var categories = document.querySelectorAll('.literary_genres')
+               if (menu.classList.contains('closed')) {
+                  menu.classList.remove('closed');
+                  categories.forEach( (cat) => {
+                     cat.classList.remove('hidden');
+                  });
+               } else {
+                  categories.forEach( (cat) => {
+                     cat.classList.add('hidden');
+                  });
+               }
+            }
+         </script>
       </div>
 
       <form>
@@ -58,14 +74,14 @@
       </form>
 
       <div class="gallery">
-         <img src="21 Lezioni.jpeg">
-         <img src="812Or5pOy+L.jpeg">
-         <img src="81MZDVHcYKL.jpeg">
-         <img src="Carne Sprecata.jpeg">
-         <img src="come_trattare_altri_farseli_amici.jpeg">
-         <img src="Homo Deus.jpeg">
-         <img src="sapiens.jpeg">
-         <img src="Shining.jpeg">
+         <img src="/images/21 Lezioni.jpeg">
+         <img src="/images/812Or5pOy+L.jpeg">
+         <img src="/images/81MZDVHcYKL.jpeg">
+         <img src="/images/Carne Sprecata.jpeg">
+         <img src="/images/come_trattare_altri_farseli_amici.jpeg">
+         <img src="/images/Homo Deus.jpeg">
+         <img src="/images/sapiens.jpeg">
+         <img src="/images/Shining.jpeg">
       </div>
    </body>
 </html>

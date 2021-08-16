@@ -43,7 +43,10 @@ exports.create = (req, res) => {
             }
         } else {
             console.log('user created');
-            res.send(data);
+            res.render('login', {
+                title: 'Login',
+                message: 'User registered successfully. Now you can login with your new account.'
+            });
         }
     });
 };
@@ -149,7 +152,7 @@ exports.toReadList = (req, res) => {
         } else {
             res.render('toread', { 
                 name: req.user.name,
-                list: data
+                list: JSON.stringify(data)
             });
         }
     });

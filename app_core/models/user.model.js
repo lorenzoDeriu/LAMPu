@@ -119,12 +119,9 @@ User.removeById = (username, result) => {
 
 User.getToReadList = (username, result) => {
     console.log('retrieving to read list for user ' + username);
-    var t0 = performance.now();
-    db.query(`SELECT B.ISBN, title, publisher, publishedDate, language, author, category
-        FROM TO_READ TR, BOOKS B, CATEGORIES C, AUTHORS A 
-        WHERE Username = ? AND TR.ISBN = B.ISBN
-        AND C.ISBN = B.ISBN AND A.ISBN = B.ISBN
-        ORDER BY B.ISBN`,
+
+    db.query(`SELECT B.ISBN, title, publisher, publishedDate, language
+        FROM BOOKS B, TO_READ TR WHERE username = ? AND B.ISBN = TR.ISBN`,
         username,
         (err, res) => {
             if (err) {
@@ -138,8 +135,9 @@ User.getToReadList = (username, result) => {
                 return;
             }
             console.log(`user ${username}'s to read list retrieved`);
-            var isbn = null;
+            
             var list = [];
+            /*var isbn = null;
             var currentBook = null;
             for (row of res) {
                 if (row.ISBN !== isbn) {
@@ -162,10 +160,16 @@ User.getToReadList = (username, result) => {
                     if (!currentBook.categories.includes(row.category))
                         currentBook.categories.push(row.category);
                 }
+            }*/
+            for (row of res) {
+                list.push({
+                    isbn: row.ISBN,
+                    title: row.title,
+                    publisher: row.publisher,
+                    publishedDate: row.publishedDate,
+                    language: row.language
+                });
             }
-            list.push(currentBook);
-            var t1 = performance.now();
-            console.log('execution time: ' + (t1-t0) + 'milliseconds.');
             result(null, list);
         });
 };
@@ -222,36 +226,41 @@ User.addBookToReadByIsbn = (username, isbn, result) => {
                                 return;
                             }
                             //insert authors
-                            for (author of book.authors) {
-                                db.query("INSERT INTO AUTHORS(ISBN, author) VALUES(?,?)",
-                                [isbn, author],
-                                (err, res) => {
-                                    if (err) {
-                                        console.log("error: " + err);
-                                        result(err, null);
-                                        return;
-                                    }
-                                });
+                            if (book.authors) {
+                                for (author of book.authors) {
+                                    db.query("INSERT INTO AUTHORS(ISBN, author) VALUES(?,?)",
+                                    [isbn, author],
+                                    (err, res) => {
+                                        if (err) {
+                                            console.log("error: " + err);
+                                            result(err, null);
+                                            return;
+                                        }
+                                    });
+                                }
                             }
                             
                             //insert categories
-                            for (category of book.categories) {
-                                db.query("INSERT INTO CATEGORIES(ISBN, category) VALUES(?,?)",
-                                [isbn, category],
-                                (err, res) => {
-                                    if (err) {
-                                        console.log("error: " + err);
-                                        result(err, null);
-                                        return;
-                                    }
-                                });
+                            if (book.categories) {
+                                for (category of book.categories) {
+                                    db.query("INSERT INTO CATEGORIES(ISBN, category) VALUES(?,?)",
+                                    [isbn, category],
+                                    (err, res) => {
+                                        if (err) {
+                                            console.log("error: " + err);
+                                            result(err, null);
+                                            return;
+                                        }
+                                    });
+                                }
                             }
-
+                            return;
                             //insert thumbnails
                         });
-                    
                     console.log(`book isbn: ${isbn} added to ${username}'s to read list.`);
+                    return;
                 });
+            return;
         }
     });
 

@@ -40,7 +40,7 @@ body {
    left: 0;
    background-color: #111; /* Black*/
    overflow-x: hidden; /* Disable horizontal scroll */
-   padding-top: 1%; /* Place content 60px from the top */
+   padding-top: 3rem; /* Place content 3rem from the top */
    transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
 }
  
@@ -51,7 +51,7 @@ body {
    padding-left: 15%;
    padding-right: 5%;
    text-decoration: none;
-   font-size: 150%;
+   font-size: medium;
    color: #818181;
    display: block;
    transition: 0.5s;
@@ -67,7 +67,7 @@ body {
    position: absolute;
    top: 0;
    right: 5%;
-   font-size: 200%;
+   font-size: large;
    margin-left: 80%;
    padding-bottom: 100%;
 }
@@ -89,7 +89,7 @@ body {
 }
 
 .sidenav .literary_genres {
-   font-size: 90%;
+   font-size: small;
    margin-left: 10%;
 }
 
@@ -137,7 +137,7 @@ input:focus, input:valid {
 	transition-duration: calc(var(--dur) * 0.25);
 	transition-delay: calc(var(--dur) * 0.25);
 	width: 100%;
-	height: 3em;
+	height: 1em;
 }
 input:focus {
 	animation: showCaret var(--dur) steps(1);
@@ -353,4 +353,77 @@ label {
 	img:hover ~ img {
 	  left: 100%;
 	}
+ }
+
+ /* aggiunte da Alessio temporaneamente */
+
+ .content-block {
+	 display: flex;
+	 flex-direction: column;
+	 align-items: center;
+	 align-content: center;
+	 font-size: medium;
+	 width: 80%;
+	 padding: 3vh 10%;
+ }
+
+ .book-container {
+	 display: flex;
+	 flex-direction: row;
+	 margin: 10px 0;
+	 height: 4rem;
+	 width: 100%;
+	 background-color: #2e3138;
+	 border-radius: 7px;
+	 border-style: solid;
+	 border-color: #1d1f24;
+	 border-width: 3px;
+ }
+
+ .book-container:hover {
+	 background-color: #1d1f24;
+	 border-radius: 7px;
+ }
+
+ .thumbnail {
+	 height: 4rem;
+	 width: 3rem;
+ }
+
+ .info-container {
+	 display: flex;
+	 flex-direction: column;
+	 padding: 0 20px;
+	 justify-content: center;
+ }
+
+ .info-title, .info-isbn {
+	 height: max-content;
+	 width: fit-content;
+	 font-size: medium;
+	 padding-left: 20px;
+ }
+
+ #load {
+	background-color: #555555;
+	border: none;
+	color: white;
+	padding: 10px 24px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: medium;
+	margin: 4px 2px;
+	cursor: pointer;
+	border-radius: 7px;
+	transition-duration: 0.2s;
+  }
+  
+ #load:hover {
+	background-color: grey;
+	color: white;
+ }
+
+ .sidenav .hidden {
+	display: none;
  }

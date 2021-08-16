@@ -17,7 +17,6 @@ router.post('/', async function(req, res, next) {
         //res.redirect('/login');
     } catch (error) {
         console.log(error);
-        //res.redirect('/register');
     }
 });
 

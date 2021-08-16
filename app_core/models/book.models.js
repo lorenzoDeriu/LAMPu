@@ -39,7 +39,7 @@ module.exports = {
 	},
 
 	bookParser: function(rowBooksArray) {
-		if(rowBooksArray.length == 0) return null;
+		if(!rowBooksArray) return null;
 
 		var array = [];
 		for(let rowBook of rowBooksArray)
