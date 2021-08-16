@@ -6,7 +6,7 @@ function initialize(passport) {
     const authenticateUser = async (username, password, done) => {
         var user = null;
         await new Promise((resolve, reject) => {
-            User.findById(username, (err, data) => {
+            User.findOne( {username: username }, (err, data) => {
                 if (err)
                     return done(null, false, { message: 'No user with that username' });
                 else {
@@ -33,7 +33,7 @@ function initialize(passport) {
     passport.use(new LocalStrategy({ usernameField: 'username' }, authenticateUser));
     passport.serializeUser((user, done) => done(null, user.username));
     passport.deserializeUser((username, done) => {
-        User.findById(username, (err, user) => {
+        User.findOne({ username: username }, (err, user) => {
             if (err)
                 return done(err, null);
             return done(null, user);

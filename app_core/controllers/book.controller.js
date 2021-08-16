@@ -38,7 +38,7 @@ module.exports = {
 				})
 
 			response.status(200).render('infoBook_page',{
-				"book": res.data;
+				"book": res.data
 			})
 		})
 	}

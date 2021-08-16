@@ -22,11 +22,11 @@ const userSchema = new mongoose.Schema({
         default: Date.now
     },
     to_read_list: {
-        type: mongoose.Types.Array,
+        type: [String],
         required: false
     },
     read_list: {
-        type: mongoose.Types.Array,
+        type: [String],
         required: false
     }
 });
