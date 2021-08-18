@@ -1,7 +1,9 @@
+const { Mongoose } = require("mongoose");
 const User = require("../models/user.model.js");
 
 // Create and Save a new user
 exports.create = (req, res) => {
+    
     if (!req.body) {
         console.log('Error: Content can not be empty!');
         res.status(400).render('error', {
@@ -15,41 +17,42 @@ exports.create = (req, res) => {
         email: req.body.email,
         password: req.body.password,
         name: req.body.name,
-        subscription: formatDate(new Date())
     });
     console.log(user);
-    User.create(user, (err, data) => {
+    
+    User.findOne({ $or: [ { username: user.username }, { email: user.email } ] }, (err, result) => {
         if (err) {
-            console.log(err);
-            if (err.code === 'ER_DUP_ENTRY') {
-                if (err.sqlMessage.indexOf('PRIMARY') >= 0) {
-                    res.render('register', {
-                        title: 'Register',
-                        error: err,
-                        message: "Username already in use"
+            return (err, null);
+        } else {
+            if (result) {
+                if (result.email === user.email) {
+                    return res.render('register', {
+                        message: 'E-mail already registered.'
                     });
                 } else {
-                    res.render('register', {
-                        title: 'Register',
-                        error: err,
-                        message: "E-mail already in use"
+                    return res.render('register', {
+                        message: 'Username already in use.'
                     });
                 }
             } else {
-                res.status(500).render('error', {
-                    error: err,
-                    message: err.message || "Some error occurred while creating the user."
+                user.save( (err, user) => {
+                    if (err) {
+                        console.log(err);
+                        res.render('error', {
+                            error: err,
+                            message: err.message
+                        });
+                    } else {
+                        res.status(201).render('login', {
+                            message: 'User registered succcessfully. Now you can login with the new account.'
+                        });
+                    }
                 });
             }
-        } else {
-            console.log('user created');
-            res.render('login', {
-                title: 'Login',
-                message: 'User registered successfully. Now you can login with your new account.'
-            });
         }
     });
 };
+
 
 // Retrieve all users from the database.
 exports.findAll = (req, res) => {

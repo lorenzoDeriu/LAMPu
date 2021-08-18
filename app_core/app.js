@@ -26,6 +26,14 @@ var logout = require('./routes/logout');
 
 var app = express();
 
+// set connection to MongoDB
+const mongoose = require('mongoose');
+const db = require('./config/db.config').MongoURI;
+
+mongoose.connect(db, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => console.log('MongoDB connected...'))
+    .catch(err => console.log(err));
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -60,6 +68,7 @@ app.use(function(req, res, next) {
 });
 
 // error handler
+/*
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
@@ -68,6 +77,6 @@ app.use(function(err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render('error');
-});
+});*/
 
 module.exports = app;
