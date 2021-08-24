@@ -4,30 +4,24 @@ const bcrypt = require('bcrypt');
 
 function initialize(passport) {
     const authenticateUser = async (username, password, done) => {
-        var user = null;
-        await new Promise((resolve, reject) => {
-            User.findOne( {username: username }, (err, data) => {
-                if (err)
-                    return done(null, false, { message: 'No user with that username' });
-                else {
-                    user = data;
-                    resolve();
+        User.findOne({username: username }, async (err, user) => {
+            if (err || !user)
+                return done(null, false, { message: 'No user with that username' });
+            else {
+                try {
+                    if (await bcrypt.compare(password, user.password)) {
+                        console.log('correct password');
+                        return done(null, user);
+                    } else {
+                        console.log('incorrect password');
+                        return done(null, false, { message: 'Password incorrect' });
+                    }
+                } catch(error) {
+                    console.log(error);
+                    return done(error);
                 }
-            })
-        });
-
-        try {
-            if (await bcrypt.compare(password, user.password)) {
-                console.log('correct password');
-                return done(null, user);
-            } else {
-                console.log('incorrect password');
-                return done(null, false, { message: 'Password incorrect' })
             }
-        } catch(err) {
-            console.log(err);
-            return done(err);
-        }
+        });
     };
 
     passport.use(new LocalStrategy({ usernameField: 'username' }, authenticateUser));

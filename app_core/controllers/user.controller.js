@@ -44,7 +44,7 @@ exports.create = (req, res) => {
                         });
                     } else {
                         res.status(201).render('login', {
-                            message: 'User registered succcessfully. Now you can login with the new account.'
+                            message: 'User registered successfully. Now you can login with the new account.'
                         });
                     }
                 });

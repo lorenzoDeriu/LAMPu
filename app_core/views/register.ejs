@@ -4,45 +4,53 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/stylesheets/style.css">
+    <link rel="stylesheet" href="/stylesheets/login_register.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/79749c0cf1.js" crossorigin="anonymous"></script>
     <title>Register</title>
 </head>
 <body>
-    <h1>Register</h1>
-    <% if (locals.messages?.error) { %>
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            <%= locals.messages.error %>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-          </div>
-    <% } %>
-    <% if (typeof message !== 'undefined') { %>
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            <%= message %>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-          </div>
-    <% } %>
-    <form action="/register" method="post">
-        <div>
-            <label for="username">Username</label>
-            <input type="text" name="username" id="username" required>
-        </div>
-        <div>
-            <label for="name">Name</label>
-            <input type="text" name="name" id="name" required>
-        </div>
-        <div>
-            <label for="email">E-mail</label>
-            <input type="email" name="email" id="email" required>
-        </div>
-        <div>
-            <label for="password">Password</label>
-            <input type="password" name="password" id="password" required>
-        </div>
-        <button type="submit">Register</button>
-    </form>
-    <a href="/login">Login</a>
-    <a href="/">Home</a>
+    <div class="container-form">
+        <h1 class="display-4" id="title">LAMBooks</h1>
+        <br>
+        <i class="fas fa-user fa-5x"></i>
+        <br>
+        <% if (locals.messages?.error) { %>
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <%= locals.messages.error %>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <% } %>
+        <% if (typeof message !== 'undefined') { %>
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <%= message %>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <% } %>
+        <form action="/register" method="post" class=" form-group-sm">
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="floatingInput" name="username" placeholder="Username" required>
+                <label for="floatingInput">Username</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="floatingInput" name="name" placeholder="Name" required>
+                <label for="floatingInput">Name</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="email" class="form-control" id="floatingInput" name="email" placeholder="E-mail" required>
+                <label for="floatingInput">E-mail</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="password" class="form-control" id="floatingPassword" name="password" placeholder="Password" required>
+                <label for="floatingPassword">Password</label>
+            </div>
+            <div class="row-cols-1">
+                <button type="submit" class="btn btn-secondary">Register</button>
+            </div>
+        </form>
+    </div>
+    <div class="row" style="color: #b6b6b6">Already have an account?</div>
+    <div class="row"><a href="/login">Sign in</a></div>
 </body>
 </html>
