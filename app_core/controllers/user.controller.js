@@ -53,23 +53,8 @@ exports.create = (req, res) => {
     });
 };
 
-
-// Retrieve all users from the database.
-exports.findAll = (req, res) => {
-    User.getAll( (err, data) => {
-        if (err) {
-            res.status(500).render('error', {
-                error: err,
-                message: err.message || "Some error occurred while retrieving all the users."
-            });
-        } else {
-            res.send(data);
-        }
-    });
-};
-
 // Find a single user with a username
-exports.findOne = (req, res) => {
+/*exports.findOne = (req, res) => {
     User.findById(req.params.username, (err, data) => {
         if (err) {
           console.log('erroreeeeeeeee');
@@ -86,7 +71,7 @@ exports.findOne = (req, res) => {
           }
         } else res.send(data);
       });
-};
+};*/
 
 // Update a user identified by the username in the request
 exports.update = (req, res) => {
@@ -139,53 +124,52 @@ exports.delete = (req, res) => {
 };
 
 exports.toReadList = (req, res) => {
-    User.getToReadList(req.user.username, (err, data) => {
+    User.findOne({ username: req.user.username }, (err, user) => {
         if (err) {
-            if (err.kind === "empty_list") {
-                res.render('toread', {
-                    name: req.user.name,
-                    message: 'No books in the list'
-                });
-            } else {
-                res.status(500).render('error', {
-                    error: err,
-                    message: err.message || "Some error occurred while retrieving the list."
-                });
-            }
+            res.status(500).render('error', {
+                error: err,
+                message: err.message || "Some error occurred while retrieving the list."
+            });
+        } else if (!user.to_read_list || user.to_read_list.length === 0) {
+            res.render('toread', {
+                name: req.user.name,
+                message: 'No books in the list'
+            });
         } else {
             res.render('toread', { 
                 name: req.user.name,
-                list: JSON.stringify(data)
+                list: JSON.stringify(user.to_read_list)
             });
         }
     });
 };
 
 exports.readBooksList = (req, res) => {
-    User.getReadBooksList(req.user.username, (err, data) => {
+    User.findOne({ username: req.user.username }, (err, user) => {
         if (err) {
-            if (err.kind === "empty_list") {
-                res.render('readbooks', {
-                    name: req.user.name,
-                    message: 'No books in the list'
-                });
-            } else {
-                res.status(500).render('error', {
-                    error: err,
-                    message: err.message || "Some error occurred while retrieving the list."
-                });
-            }
-        } else {
-            res.render('readbooks', { 
+            res.status(500).render('error', {
+                error: err,
+                message: err.message || "Some error occurred while retrieving the list."
+            });
+        } else if (!user.read_list || user.read_list.length === 0) {
+            res.render('toread', {
                 name: req.user.name,
-                list: data
+                message: 'No books in the list'
+            });
+        } else {
+            res.render('toread', { 
+                name: req.user.name,
+                list: JSON.stringify(user.read_list)
             });
         }
     });
 };
 
 exports.addBookToRead = (req, res) => {
-    User.addBookToReadByIsbn(req.user.username, req.body.isbn, (err, data) => {
+    User.updateOne(
+        { username: req.user.username },
+        { $addToSet: { to_read_list: req.body.isbn} },
+        (err, data) => {
         if (err) {
             res.status(500).render('error', {
                 error: err,

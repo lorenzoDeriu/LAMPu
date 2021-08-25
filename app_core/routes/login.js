@@ -9,7 +9,7 @@ router.get('/', checkNotAuthenticated, function (req, res, next) {
 });
 
 router.post('/', passport.authenticate('local', {
-  successRedirect: '/toread',
+  successRedirect: '/',
   failureRedirect: '/login',
   failureFlash: true
 }));

@@ -23,6 +23,7 @@ var registerUser = require('./routes/register');
 var booksCategories = require('./routes/categories');
 var userToRead = require('./routes/toread');
 var logout = require('./routes/logout');
+var search = require('./routes/search');
 
 var app = express();
 
@@ -61,6 +62,7 @@ app.use('/register', registerUser);
 app.use('/categories', booksCategories);
 app.use('/toread', userToRead);
 app.use('/logout', logout);
+app.use('/search', search);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

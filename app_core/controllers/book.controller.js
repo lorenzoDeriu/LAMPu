@@ -1,4 +1,5 @@
-const Book = require("../models/book.models.js")
+const Book = require("../models/book.models.js");
+const User = require("../models/user.model");
 
 module.exports = {
 	search: function(request, response) {
@@ -16,9 +17,36 @@ module.exports = {
 				})
 				return;
 			}
+			var userToReadList = [];
+			var userReadList = [];
+			if (request.user?.username) {
+				User.findOne({ username: request.user.username }, (err, user) => {
+					if (err) {
+						response.status(500).render('error', {
+							"message": "Database error"
+						});
+						return;
+					} else {
+						userToReadList.push(user.to_read_list);
+						userReadList.push(user.read_list);
+					}
+				});
+			}
 
-			response.status(200).render('search_page', {
-				"bookList": res.data
+			res.data.forEach( (book) => {
+				book.toRead = ( userToReadList.includes(book.isbn[0].identifier) ||
+								userToReadList.includes(book.isbn[0].identifier) ) 
+								? true : false;
+
+				book.read = ( userReadList.includes(book.isbn[0].identifier) ||
+								userReadList.includes(book.isbn[0].identifier) ) 
+								? true : false;
+				console.log(book);
+			});
+
+			response.status(200).render('search', {
+				search: request.body.settings,
+				list: JSON.stringify(res.data)
 			})
 		})
 	},

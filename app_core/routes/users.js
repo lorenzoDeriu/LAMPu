@@ -6,10 +6,10 @@ var users = require('../controllers/user.controller');
 router.post('/', users.create); // da trasferire in register.js
 
 /* GET all users (DEBUG) */
-router.get('/', users.findAll);
+//router.get('/', users.findAll);
 
 /* GET a user by username */
-router.get('/:username', users.findOne);
+//router.get('/:username', users.findOne);
 
 /* UPDATE user by username */
 router.put('/:username', users.update);

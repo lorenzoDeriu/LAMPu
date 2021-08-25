@@ -267,8 +267,8 @@ label {
 	transition: all 0.15s cubic-bezier(0.3, 0.1, 0.3, 0.85);
 	position: relative;
 	box-shadow: 0 0 0 #0000;
-	opacity: 0.67;
-	filter: sepia(80%) hue-rotate(180deg);
+	/*opacity: 0.67;*/
+	/*filter: sepia(80%) hue-rotate(180deg);*/
  }
  img:first-child {
 	border-radius: 10px 10px 0 0;
@@ -364,15 +364,18 @@ label {
 	 align-content: center;
 	 font-size: medium;
 	 width: 80%;
-	 padding: 3vh 10%;
+	 margin-left: 10%;
+	 margin-right: 10%;
+	 /*padding: 3vh 10%;*/
  }
 
  .book-container {
 	 display: flex;
 	 flex-direction: row;
-	 margin: 10px 0;
+	 margin-bottom: 10px;
+	 margin-left: 10%;
 	 height: 4rem;
-	 width: 100%;
+	 width: 80%;
 	 background-color: #2e3138;
 	 border-radius: 7px;
 	 border-style: solid;
@@ -383,6 +386,7 @@ label {
  .book-container:hover {
 	 background-color: #1d1f24;
 	 border-radius: 7px;
+	 cursor: pointer;
  }
 
  .thumbnail {
@@ -393,15 +397,19 @@ label {
  .info-container {
 	 display: flex;
 	 flex-direction: column;
-	 padding: 0 20px;
+	 padding: 20px 20px;
 	 justify-content: center;
+	 align-items: left;
+	 align-content: left;
+	 max-width: 80%;
  }
 
- .info-title, .info-isbn {
+ .info-title, .info-authors {
 	 height: max-content;
 	 width: fit-content;
 	 font-size: medium;
-	 padding-left: 20px;
+	 padding-left: 10px;
+	 margin: 5px 5px 5px 5px;
  }
 
  #load {

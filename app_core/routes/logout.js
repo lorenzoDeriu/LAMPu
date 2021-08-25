@@ -5,7 +5,7 @@ const app = require('../app');
 
 router.delete('/', (req, res) => {
     req.logOut();
-    res.redirect('/login');
+    res.redirect('/');
 });
 
 module.exports = router;
