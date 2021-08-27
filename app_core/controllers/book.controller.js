@@ -17,7 +17,7 @@ module.exports = {
 				})
 				return;
 			}
-			
+
 			var userToReadList = [];
 			var userReadList = [];
 			if (request.user?.username) {
