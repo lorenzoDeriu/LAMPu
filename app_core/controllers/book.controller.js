@@ -17,6 +17,7 @@ module.exports = {
 				})
 				return;
 			}
+			
 			var userToReadList = [];
 			var userReadList = [];
 			if (request.user?.username) {
@@ -34,12 +35,13 @@ module.exports = {
 			}
 
 			res.data.forEach( (book) => {
+				console.log(book)
 				book.toRead = ( userToReadList.includes(book.isbn[0].identifier) ||
-								userToReadList.includes(book.isbn[0].identifier) ) 
+								userToReadList.includes(book.isbn[1].identifier) ) 
 								? true : false;
 
 				book.read = ( userReadList.includes(book.isbn[0].identifier) ||
-								userReadList.includes(book.isbn[0].identifier) ) 
+								userReadList.includes(book.isbn[1].identifier) ) 
 								? true : false;
 				console.log(book);
 			});

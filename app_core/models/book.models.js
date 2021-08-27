@@ -44,16 +44,19 @@ module.exports = {
 		var array = [];
 
 		for(let rowBook of rowBooksArray) {
-			var selfLink = "";
-			for(let identifiers of rowBook.volumeInfo.industryIdentifiers)
-				if(identifiers.type != "ISBN_10" && identifiers.type != "ISBN_13") selfLink = rowBook.selfLink;
+			var selfLink;
+			for(let index = 0; index < rowBook.volumeInfo.industryIdentifiers.length; index++) {
+				if(rowBook.volumeInfo.industryIdentifiers[index].type != "ISBN_10" && rowBook.volumeInfo.industryIdentifiers[index].type != "ISBN_13") {
+					selfLink = rowBook.selfLink;
+				}
+			}
 
-			if(selfLink != "") {
+			if(selfLink == undefined) {
 				var res = await Google_Books.getSelfLink(selfLink);
 				rowBook.volumeInfo.industryIdentifiers = res.data.volumeInfo.industryIdentifiers;
 			}
 
-			if(rowBook.volumeInfo.title != undefined)
+			if(!(rowBook.volumeInfo.title != undefined) && !(rowBook.volumeInfo.isbn == undefined))
 				array.push(new this.Book(rowBook));
 		}
 
