@@ -13,6 +13,7 @@ module.exports = {
 			this.thumbnail = obj.volumeInfo.imageLinks;
 			this.language = obj.volumeInfo.language;
 			this.description = obj.volumeInfo.description;
+			this.pageCount = obj.volumeInfo.pageCount;
 		}	
 	},
 
@@ -26,7 +27,7 @@ module.exports = {
 
 		if(response.err)
 			return response;
-		else response.data = this.bookParser(response.data);
+		else response.data = await this.bookParser(response.data);
 
 		return response;
 	},
@@ -38,16 +39,25 @@ module.exports = {
 		return response;
 	},
 
-	bookParser: function(rowBooksArray) {
+	bookParser: async function(rowBooksArray) {
 		if(!rowBooksArray) return null;
-
 		var array = [];
-		for(let rowBook of rowBooksArray)
-			array.push(new this.Book(rowBook));
+
+		for(let rowBook of rowBooksArray) {
+			var selfLink = "";
+			for(let identifiers of rowBook.volumeInfo.industryIdentifiers)
+				if(identifiers.type != "ISBN_10" && identifiers.type != "ISBN_13") selfLink = rowBook.selfLink;
+
+			if(selfLink != "") {
+				var res = await Google_Books.getSelfLink(selfLink);
+				rowBook.volumeInfo.industryIdentifiers = res.data.volumeInfo.industryIdentifiers;
+			}
+
+			if(rowBook.volumeInfo.title != undefined)
+				array.push(new this.Book(rowBook));
+		}
+
 		return array;
 	}
 
 }
-
-
-
