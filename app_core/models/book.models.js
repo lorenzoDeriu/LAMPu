@@ -24,7 +24,7 @@ module.exports = {
 		else query = Query.queryBuilder(settings); // generic search
 
 		response = await Google_Books.getInfo(query);
-		console.log('libri trovati: ' + response.data.length);
+		console.log('found books: ' + response.data.length);
 		if(response.err)
 			return response;
 		else response.data = await this.bookParser(response.data);
@@ -45,13 +45,16 @@ module.exports = {
 
 		for(let rowBook of rowBooksArray) {
 			let selfLink = undefined;
-
-			for(let index = 0; index < rowBook.volumeInfo.industryIdentifiers.length; index++) {
-				if(rowBook.volumeInfo.industryIdentifiers[index].type != "ISBN_10" && rowBook.volumeInfo.industryIdentifiers[index].type != "ISBN_13") {
-					selfLink = rowBook.selfLink;
+			if (!rowBook.volumeInfo.industryIdentifiers) {
+				selfLink = rowBook.selfLink;
+			} else {
+				for(let index = 0; index < rowBook.volumeInfo.industryIdentifiers.length; index++) {
+					if(rowBook.volumeInfo.industryIdentifiers[index].type != "ISBN_10" && rowBook.volumeInfo.industryIdentifiers[index].type != "ISBN_13") {
+						selfLink = rowBook.selfLink;
+					}
 				}
 			}
-
+			
 			if(selfLink) {
 				var res = await Google_Books.getSelfLink(selfLink);
 				rowBook.volumeInfo = res.data.volumeInfo;

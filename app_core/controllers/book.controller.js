@@ -35,7 +35,6 @@ module.exports = {
 			}
 
 			res.data.forEach( (book) => {
-				console.log(book)
 				book.toRead = ( userToReadList.includes(book.isbn[0].identifier) ||
 								userToReadList.includes(book.isbn[1].identifier) ) 
 								? true : false;
@@ -43,7 +42,6 @@ module.exports = {
 				book.read = ( userReadList.includes(book.isbn[0].identifier) ||
 								userReadList.includes(book.isbn[1].identifier) ) 
 								? true : false;
-				console.log(book);
 			});
 
 			response.status(200).render('search', {
