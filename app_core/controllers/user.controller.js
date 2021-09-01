@@ -1,4 +1,5 @@
-const { Mongoose } = require("mongoose");
+const Mongoose = require("mongoose");
+const Book = require("../models/bookDB.model.js");
 const User = require("../models/user.model.js");
 
 // Create and Save a new user
@@ -124,7 +125,7 @@ exports.delete = (req, res) => {
 };
 
 exports.toReadList = (req, res) => {
-    User.findOne({ username: req.user.username }, (err, user) => {
+    User.findOne({ username: req.user.username }, async (err, user) => {
         if (err) {
             res.status(500).render('error', {
                 error: err,
@@ -136,9 +137,19 @@ exports.toReadList = (req, res) => {
                 message: 'No books in the list'
             });
         } else {
-            res.render('toread', { 
+            var toReadList = [];
+            for await (let ISBN of user.to_read_list) {
+                await Book.findOne({ 'isbn.identifier': ISBN }, (err, book) => {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        toReadList.push(book);
+                    }
+                });
+            }
+            return res.render('toread', { 
                 name: req.user.name,
-                list: JSON.stringify(user.to_read_list)
+                list: JSON.stringify(toReadList)
             });
         }
     });
@@ -166,23 +177,41 @@ exports.readBooksList = (req, res) => {
 };
 
 exports.addBookToRead = (req, res) => {
-    User.updateOne(
-        { username: req.user.username },
-        { $addToSet: { to_read_list: req.body.isbn} },
-        (err, data) => {
-        if (err) {
-            res.status(500).render('error', {
-                error: err,
-                message: err.message || "Some error occurred while adding the book to the list."
-            });
-        } else {
-            res.render('toread', {
-                name: req.user.name,
-                message: "Book added to the list",
-                refreshButton: true
-            });
-        }
-    })
+    if (!req.user?.username) {
+        res.render('login', { message: 'You need to sign in first to add books to your lists.' });
+    } else {
+        console.log(JSON.parse(req.body.book));
+        let book = Book(JSON.parse(req.body.book));
+        console.log(book);
+        User.updateOne(
+            { username: req.user.username },
+            { $addToSet: { to_read_list: book.isbn[0]?.identifier || book.isbn[1]?.identifier} },
+            (err, data) => {
+            if (err) {
+                res.status(500).render('error', {
+                    error: err,
+                    message: err.message || "Some error occurred while adding the book to the list."
+                });
+            } else {
+                Book.findOneAndUpdate(
+                    { isbn: book.isbn }, // query
+                    book, // update
+                    { upsert: true, useFindAndModify: false }, //options
+                    (err, data) => {
+                        if (err) {
+                            res.status(500).render('error', {
+                                error: err,
+                                message: err.message || "Some error occurred while adding the book to the database."
+                            });
+                        } else {
+                            res.send('book added');
+                        }
+                    }
+                )
+            }
+        });
+    }
+    
 }
 
 /* https://stackoverflow.com/questions/44493088/format-a-date-string-in-javascript */

@@ -10,7 +10,7 @@ module.exports = {
 			return;
 		}
 
-		Book.create(request.body.settings).then((res) => {
+		Book.create(request.body.settings).then(async (res) => {
 			if(res.err) {
 				response.status(res.err.status).render('error', {
 					"message": "HTTP error status " + res.err.status
@@ -21,19 +21,19 @@ module.exports = {
 			var userToReadList = [];
 			var userReadList = [];
 			if (request.user?.username) {
-				User.findOne({ username: request.user.username }, (err, user) => {
+				await User.findOne({ username: request.user.username }, (err, user) => {
 					if (err) {
 						response.status(500).render('error', {
 							"message": "Database error"
 						});
 						return;
 					} else {
-						userToReadList.push(user.to_read_list);
-						userReadList.push(user.read_list);
+						userToReadList = user.to_read_list;
+						userReadList = user.read_list;
 					}
 				});
 			}
-
+			
 			res.data.forEach( (book) => {
 				book.toRead = ( userToReadList.includes(book.isbn[0].identifier) ||
 								userToReadList.includes(book.isbn[1].identifier) ) 

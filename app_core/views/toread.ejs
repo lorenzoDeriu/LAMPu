@@ -81,9 +81,6 @@
             <p><%= message %></p>
         <% } %>
         <% if (typeof list !== 'undefined') { %>
-            <% for (book of list) {%>
-               <p><%console.log(book)%></p>
-            <% } %>
             <div class="list_books">
             </div>
             <button id='load'>Load more</button>
@@ -133,13 +130,6 @@
                 }
             </script>
         <% } %>
-      </div>
-      <div class="add-book">
-         <form action="/toread/add" method="post">
-            <input type="text" name="isbn" required>
-            <br>
-            <input type="submit" value="Add">
-         </form>
       </div>
    </body>
 </html>

@@ -1,18 +1,17 @@
-const BookModel = require("book.models.js");
 const mongoose = require('mongoose'); 
 
-class BookDB_model {
-	constructor(book) {
-		this.title = book.title;
-		this.authors = book.authors;
-		this.isbn = book.isbn;
-		this.thumbnail = book.thumbnail;
+const isbn_schema = new mongoose.Schema({
+	type: {
+		type: String,
+		required: true
+	},
+	identifier: {
+		type: String,
+		required: true
 	}
-}
+}, { _id: false });
 
-module.exports = BookDB;
-
-bookDB_schema: mongoose.Schema({
+const bookDB_schema = new mongoose.Schema({
 	title: {
 		type: String,
 		required: true
@@ -22,18 +21,18 @@ bookDB_schema: mongoose.Schema({
 		required: true
 	},
 	isbn: {
-		type: [String],
+		type: [isbn_schema],
 		required: true
 	},
 	thumbnail: {
-		type: [String],
+		type: Object,
 		required: false
 	},
-	publishDate: {
+	publishedDate: {
 		type: String,
 		required: false
 	}
-});
+}, { _id: false });
 
-const Book = new mongoose.model('Book', bookDB_schema);
+const Book = mongoose.model('Book', bookDB_schema);
 module.exports = Book;
