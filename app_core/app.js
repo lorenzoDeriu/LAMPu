@@ -8,6 +8,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var methodOverride = require('method-override');
+const expressLayouts = require('express-ejs-layouts');
 
 // passport
 var passport = require('passport');
@@ -38,6 +39,8 @@ mongoose.connect(db, { useNewUrlParser: true, useUnifiedTopology: true })
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+app.use(expressLayouts);
+app.set('layout', './layout');
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -77,7 +80,7 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  res.render('error', { error: err, message: err.message });
 });
 
 module.exports = app;

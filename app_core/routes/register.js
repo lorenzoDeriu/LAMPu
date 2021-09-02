@@ -5,7 +5,7 @@ var users = require('../controllers/user.controller');
 
 /* GET register user page. */
 router.get('/', function(req, res, next) {
-  res.render('register', { title: 'Register' });
+  res.render('register', { layout: false });
 });
 
 /* POST register user */

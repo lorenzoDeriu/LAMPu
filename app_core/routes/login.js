@@ -5,7 +5,7 @@ const app = require('../app');
 
 /* GET user login page. */
 router.get('/', checkNotAuthenticated, function (req, res, next) {
-  res.render('login');
+  res.render('login', { layout: false });
 });
 
 router.post('/', passport.authenticate('local', {

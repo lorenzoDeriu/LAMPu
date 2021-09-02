@@ -13,7 +13,8 @@ module.exports = {
 		Book.create(request.body.settings).then(async (res) => {
 			if(res.err) {
 				response.status(res.err.status).render('error', {
-					"message": "HTTP error status " + res.err.status
+					"message": "HTTP error status " + res.err.status,
+					"error": res.err
 				})
 				return;
 			}
@@ -24,7 +25,8 @@ module.exports = {
 				await User.findOne({ username: request.user.username }, (err, user) => {
 					if (err) {
 						response.status(500).render('error', {
-							"message": "Database error"
+							"message": "Database error",
+							"error": err
 						});
 						return;
 					} else {
@@ -45,6 +47,7 @@ module.exports = {
 			});
 
 			response.status(200).render('search', {
+				name: request.user.username,
 				search: request.body.settings,
 				list: JSON.stringify(res.data)
 			})
@@ -62,10 +65,12 @@ module.exports = {
 		Book.foundByISBN(request.body.isbn).then((res) => {
 			if(res.err)
 				response.status(res.err.status).render('error', {
-					"message": "HTTP error status" + res.err.status
+					"message": "HTTP error status" + res.err.status,
+					"error": res.err
 				})
 
-			response.status(200).render('infoBook_page',{
+			response.status(200).render('infoBook',{
+				"name": request.user.username,
 				"book": res.data
 			})
 		})

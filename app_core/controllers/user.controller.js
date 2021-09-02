@@ -28,10 +28,12 @@ exports.create = (req, res) => {
             if (result) {
                 if (result.email === user.email) {
                     return res.render('register', {
+                        layout: false,
                         message: 'E-mail already registered.'
                     });
                 } else {
                     return res.render('register', {
+                        layout: false,
                         message: 'Username already in use.'
                     });
                 }
@@ -45,6 +47,7 @@ exports.create = (req, res) => {
                         });
                     } else {
                         res.status(201).render('login', {
+                            layout: false,
                             message: 'User registered successfully. Now you can login with the new account.'
                         });
                     }
@@ -178,7 +181,10 @@ exports.readBooksList = (req, res) => {
 
 exports.addBookToRead = (req, res) => {
     if (!req.user?.username) {
-        res.render('login', { message: 'You need to sign in first to add books to your lists.' });
+        res.render('login', { 
+            layout: false,
+            message: 'You need to sign in first to add books to your lists.'
+        });
     } else {
         console.log(JSON.parse(req.body.book));
         let book = Book(JSON.parse(req.body.book));

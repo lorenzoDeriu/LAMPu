@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <head>
+      <title> LAMBooks </title>
+      <link rel="icon" href="/images/icon_website.png">
+      <link rel="stylesheet" href="/stylesheets/Page_template_style.css">
+   </head>
+
+   <body>
+      <div id="header">
+         <span onclick="openNav()">
+            <div class="menu_icon">
+               <div class="line"></div>
+               <div class="line"></div>
+               <div class="line"></div>
+            </div>
+            <script>
+               function closeNav() {
+                  document.getElementById("Sidebar_menu").style.width = "0";
+                  document.getElementById("main").style.marginLeft = "0";
+                  document.body.style.backgroundColor = "#403C3C";
+               }
+            </script>
+         </span>
+         <div id="title"> LAMBooks </div>
+      </div>
+
+      <div id="Sidebar_menu" class="sidenav">
+         <a href="javascript:void(0)" class="close_menu" onclick="closeNav()">&times;</a>
+         <script>
+            function openNav() {
+               document.getElementById("Sidebar_menu").style.width = "15%";
+               document.getElementById("main").style.marginLeft = "10%";
+               document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
+            }
+         </script>
+         <a href="Read.html"> My Read List </a>
+         <a href="/toread"> My To Read List </a>
+         <a href="Suggested.html"> Suggested </a>
+         <a href="#" class="categories_dropdown closed" onclick="dropdown()"> Categories </a>
+            <a href="#" class="literary_genres hidden"> Giallo </a>
+            <a href="#" class="literary_genres hidden"> Rosa </a>
+            <a href="#" class="literary_genres hidden"> Saggistica </a>
+            <a href="#" class="literary_genres hidden"> Favole </a>
+            <a href="#" class="literary_genres hidden"> Horror </a>
+            <a href="#" class="literary_genres hidden"> Azione </a>
+            <a href="#" class="literary_genres hidden"> Avventura </a>
+            <a href="#" class="literary_genres hidden"> Biografia </a>
+            <a href="#" class="literary_genres hidden"> Autobiografia </a>
+            <a href="#" class="literary_genres hidden"> Storico </a>
+         <% if (name) { %>
+            <form action="/logout?_method=DELETE" method="POST">
+                  <a href="#" onclick="this.closest('form').submit();return false;">Log Out</a>
+            </form>
+         <% } else { %>
+            <a href="/login">Login</a>
+         <% } %>
+         <script>
+            function dropdown() {
+               var menu = document.querySelector('.categories_dropdown');
+               var categories = document.querySelectorAll('.literary_genres')
+               if (menu.classList.contains('closed')) {
+                  menu.classList.remove('closed');
+                  categories.forEach( (cat) => {
+                     cat.classList.remove('hidden');
+                  });
+               } else {
+                  categories.forEach( (cat) => {
+                     cat.classList.add('hidden');
+                  });
+               }
+            }
+         </script>
+      </div>
+
+      <form action="/search" method="POST">
+         <label for="search">Search</label>
+         <input name="settings" id="search" type="search" pattern=".*\S.*" required>
+         <span class="caret"></span>
+      </form>
+      <div class="content-block">
+         <%- body %>
+      </div>
+   </body>
+</html>
