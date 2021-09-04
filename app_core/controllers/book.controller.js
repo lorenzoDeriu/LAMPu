@@ -47,7 +47,7 @@ module.exports = {
 			});
 
 			response.status(200).render('search', {
-				name: request.user.username,
+				name: request.user?.username,
 				search: request.body.settings,
 				list: JSON.stringify(res.data)
 			})
