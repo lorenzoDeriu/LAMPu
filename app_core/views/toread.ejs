@@ -5,7 +5,9 @@
 <% if (typeof list !== 'undefined') { %>
    <div class="list_books">
    </div>
-   <button id='load'>Load more</button>
+   <% if (JSON.parse(list).length > 5) {%>
+      <button id='load'>Load more</button>
+   <% } %>
    <script>
       var books = <%-list%>;
       var listBooks = document.querySelector('.list_books');
@@ -14,6 +16,7 @@
          let newContainer = newBookContainer(books[i]);
          listBooks.appendChild(newContainer);
       }
+      
       let loadButton = document.getElementById('load');
       loadButton.addEventListener('click', () => {
          let numElements = i + 5;
@@ -31,25 +34,40 @@
 
          let thumbnail = document.createElement('div');
          thumbnail.className = 'thumbnail';
-         thumbnail.innerHTML = '<img src="/images/sapiens.jpeg">';
+         if (book.thumbnail?.smallThumbnail)
+            thumbnail.innerHTML = `<img src="${book.thumbnail.smallThumbnail}">`;
+         else if (book.thumbnail?.thumbnail)
+            thumbnail.innerHTML = `<img src="${book.thumbnail.thumbnail}">`;
+         else if (book.thumbnail && book.thumbnail[0])
+            thumbnail.innerHTML = `<img src="${book.thumbnail[0]}">`;
+         else
+            thumbnail.innerHTML = '<img src="/images/unknown.png">';
 
          let infoContainer = document.createElement('div');
          infoContainer.className = 'info-container';
 
-         let p = document.createElement('p');
-         infoContainer.className = 'info-title';
-         p.appendChild(document.createTextNode(book.title));
-         infoContainer.appendChild(p);
+         let title = document.createElement('p');
+         title.className = 'info-title';
+         title.appendChild(document.createTextNode(trimTitle(book.title)));
+         infoContainer.appendChild(title);
 
-         p = document.createElement('p');
-         infoContainer.className = 'info-isbn';
-         p.appendChild(document.createTextNode(book.isbn[0].identifier));
-         infoContainer.appendChild(p);
+         let authors = document.createElement('p');
+         authors.className = 'info-authors';
+         authors.appendChild(document.createTextNode(book.authors ? book.authors : "Unknown author"));
+         infoContainer.appendChild(authors);
 
          newContainer.appendChild(thumbnail);
          newContainer.appendChild(infoContainer);
+
          return newContainer;
       }
       
+      function trimTitle(originalTitle) {
+         if (originalTitle.length > 100) {
+            return originalTitle.substring(0, 99) + "...";
+         } else {
+            return originalTitle;
+         }
+      }
    </script>
 <% } %>

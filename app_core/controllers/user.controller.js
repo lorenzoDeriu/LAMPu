@@ -158,22 +158,32 @@ exports.toReadList = (req, res) => {
     });
 };
 
-exports.readBooksList = (req, res) => {
-    User.findOne({ username: req.user.username }, (err, user) => {
+exports.readList = (req, res) => {
+    User.findOne({ username: req.user.username }, async (err, user) => {
         if (err) {
             res.status(500).render('error', {
                 error: err,
                 message: err.message || "Some error occurred while retrieving the list."
             });
         } else if (!user.read_list || user.read_list.length === 0) {
-            res.render('toread', {
+            res.render('read', {
                 name: req.user.name,
                 message: 'No books in the list'
             });
         } else {
-            res.render('toread', { 
+            var readList = [];
+            for await (let ISBN of user.read_list) {
+                await Book.findOne({ 'isbn.identifier': ISBN }, (err, book) => {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        readList.push(book);
+                    }
+                });
+            }
+            return res.render('read', { 
                 name: req.user.name,
-                list: JSON.stringify(user.read_list)
+                list: JSON.stringify(readList)
             });
         }
     });
@@ -186,9 +196,7 @@ exports.addBookToRead = (req, res) => {
             message: 'You need to sign in first to add books to your lists.'
         });
     } else {
-        console.log(JSON.parse(req.body.book));
         let book = Book(JSON.parse(req.body.book));
-        console.log(book);
         User.updateOne(
             { username: req.user.username },
             { $addToSet: { to_read_list: book.isbn[0]?.identifier || book.isbn[1]?.identifier} },
@@ -217,7 +225,44 @@ exports.addBookToRead = (req, res) => {
             }
         });
     }
-    
+}
+
+exports.addBookRead = (req, res) => {
+    if (!req.user?.username) {
+        res.render('login', { 
+            layout: false,
+            message: 'You need to sign in first to add books to your lists.'
+        });
+    } else {
+        let book = Book(JSON.parse(req.body.book));
+        User.updateOne(
+            { username: req.user.username },
+            { $addToSet: { read_list: book.isbn[0]?.identifier || book.isbn[1]?.identifier} },
+            (err, data) => {
+            if (err) {
+                res.status(500).render('error', {
+                    error: err,
+                    message: err.message || "Some error occurred while adding the book to the list."
+                });
+            } else {
+                Book.findOneAndUpdate(
+                    { isbn: book.isbn }, // query
+                    book, // update
+                    { upsert: true, useFindAndModify: false }, //options
+                    (err, data) => {
+                        if (err) {
+                            res.status(500).render('error', {
+                                error: err,
+                                message: err.message || "Some error occurred while adding the book to the database."
+                            });
+                        } else {
+                            res.send('book added');
+                        }
+                    }
+                )
+            }
+        });
+    }
 }
 
 /* https://stackoverflow.com/questions/44493088/format-a-date-string-in-javascript */

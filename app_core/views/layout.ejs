@@ -23,7 +23,9 @@
                }
             </script>
          </span>
-         <div id="title"> LAMBooks </div>
+         <div id="title"> 
+            <a href="/"> LAMBooks </a>
+         </div>
       </div>
 
       <div id="Sidebar_menu" class="sidenav">
@@ -35,7 +37,8 @@
                document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
             }
          </script>
-         <a href="Read.html"> My Read List </a>
+         <a href="/"> Home </a>
+         <a href="/read"> My Read List </a>
          <a href="/toread"> My To Read List </a>
          <a href="Suggested.html"> Suggested </a>
          <a href="#" class="categories_dropdown closed" onclick="dropdown()"> Categories </a>
@@ -49,10 +52,11 @@
             <a href="#" class="literary_genres hidden"> Biografia </a>
             <a href="#" class="literary_genres hidden"> Autobiografia </a>
             <a href="#" class="literary_genres hidden"> Storico </a>
+         <a href="/account"> Account </a>
          <% if (name) { %>
-            <form action="/logout?_method=DELETE" method="POST">
-                  <a href="#" onclick="this.closest('form').submit();return false;">Log Out</a>
-            </form>
+         <form action="/logout?_method=DELETE" method="POST">
+               <a href="#" onclick="this.closest('form').submit();return false;">Log Out</a>
+         </form>
          <% } else { %>
             <a href="/login">Login</a>
          <% } %>

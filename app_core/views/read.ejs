@@ -1,4 +1,4 @@
-<h2>Results of the search for "<%=search%>":</h2>
+<h2><%=name%>'s read books </h2>
 <% if (typeof message !== 'undefined') { %>
    <p><%= message %></p>
 <% } %>
@@ -16,6 +16,7 @@
          let newContainer = newBookContainer(books[i]);
          listBooks.appendChild(newContainer);
       }
+      
       let loadButton = document.getElementById('load');
       loadButton.addEventListener('click', () => {
          let numElements = i + 5;
@@ -33,13 +34,13 @@
 
          let thumbnail = document.createElement('div');
          thumbnail.className = 'thumbnail';
-         if (book.thumbnail?.thumbnail)
-            thumbnail.innerHTML = `<img src="${book.thumbnail.thumbnail}">`;
-         else if (book.thumbnail?.smallThumbnail)
+         if (book.thumbnail?.smallThumbnail)
             thumbnail.innerHTML = `<img src="${book.thumbnail.smallThumbnail}">`;
+         else if (book.thumbnail?.thumbnail)
+            thumbnail.innerHTML = `<img src="${book.thumbnail.thumbnail}">`;
          else if (book.thumbnail && book.thumbnail[0])
             thumbnail.innerHTML = `<img src="${book.thumbnail[0]}">`;
-         else 
+         else
             thumbnail.innerHTML = '<img src="/images/unknown.png">';
 
          let infoContainer = document.createElement('div');
@@ -58,43 +59,9 @@
          newContainer.appendChild(thumbnail);
          newContainer.appendChild(infoContainer);
 
-         let forms = document.createElement('div');
-         forms.className = 'addToList-buttons';
-         
-         forms.appendChild(addToListDiv('toread', book));
-         forms.appendChild(addToListDiv('read', book));
-         newContainer.appendChild(forms);
-
          return newContainer;
       }
-
-      function addToListDiv(listName, book) {
-         let div = document.createElement('div');
-         div.className = (listName === 'toread') ? 'add-toread' : 'add-read';
-         let form = document.createElement('form');
-         form.method = 'POST';
-         form.action = (listName === 'toread') ? '/search/add/toread' : '/search/add/read';
-         let input = document.createElement('input');
-         input.type = 'hidden';
-         input.name = 'book';
-         input.value = JSON.stringify(book); //book.isbn[0]?.identifier ?? book.isbn[1]?.identifier;
-         let submitBtn = document.createElement('button');
-         submitBtn.innerText = (listName === 'toread') ? 'to read' : 'read';
-         if (listName === 'toread') {
-            if (book.toRead) {
-               submitBtn.disabled = true;
-            }
-         } else {
-            if (book.read) {
-               submitBtn.disabled = true;
-            }
-         }
-         form.appendChild(input);
-         form.appendChild(submitBtn);
-         div.appendChild(form);
-         return div;
-      }
-
+      
       function trimTitle(originalTitle) {
          if (originalTitle.length > 100) {
             return originalTitle.substring(0, 99) + "...";

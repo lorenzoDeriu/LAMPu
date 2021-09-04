@@ -22,7 +22,9 @@ router.post('/add/toread', (req, res) => {
     users.addBookToRead(req, res);
 });
 
-router.post('/add/read');
+router.post('/add/read', (req, res) => {
+    users.addBookRead(req, res);
+});
 
 //router.post('/add', users.addBookToRead);
 

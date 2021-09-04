@@ -23,6 +23,7 @@ var userLogin = require('./routes/login');
 var registerUser = require('./routes/register');
 var booksCategories = require('./routes/categories');
 var userToRead = require('./routes/toread');
+var userReadBooks = require('./routes/read');
 var logout = require('./routes/logout');
 var search = require('./routes/search');
 
@@ -64,6 +65,7 @@ app.use('/login', userLogin);
 app.use('/register', registerUser);
 app.use('/categories', booksCategories);
 app.use('/toread', userToRead);
+app.use('/read', userReadBooks);
 app.use('/logout', logout);
 app.use('/search', search);
 
