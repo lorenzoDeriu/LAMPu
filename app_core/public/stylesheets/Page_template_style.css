@@ -371,17 +371,18 @@ label {
  }
 
  .book-container {
-	 display: flex;
+	 /*display: flex;*/
 	 flex-direction: row;
 	 margin-bottom: 10px;
 	 margin-left: 10%;
-	 height: 4rem;
+	 height: 4.2rem;
 	 width: 80%;
 	 background-color: #2e3138;
 	 border-radius: 7px;
 	 border-style: solid;
 	 border-color: #1d1f24;
 	 border-width: 3px;
+	 float: left;
  }
 
  .book-container:hover {
@@ -393,16 +394,18 @@ label {
  .thumbnail {
 	 height: 4rem;
 	 width: 3rem;
+	 float: left;
  }
 
  .info-container {
 	 display: flex;
 	 flex-direction: column;
-	 padding: 20px 20px;
+	 padding: 10px 10px;
 	 justify-content: center;
 	 align-items: left;
 	 align-content: left;
-	 max-width: 80%;
+	 max-width: 70%;
+	 margin-right:0% ;
  }
 
  .info-title, .info-authors {
@@ -411,6 +414,7 @@ label {
 	 font-size: medium;
 	 padding-left: 10px;
 	 margin: 5px 5px 5px 5px;
+	 width: 80%;
  }
 
  #load {
@@ -435,4 +439,28 @@ label {
 
  .sidenav .hidden {
 	display: none;
+ }
+
+ .addToList-buttons {
+ 	width: 12%;
+ 	
+ 	text-align: center;
+  	align-items: center;
+  	justify-content: center;
+  	
+  	position: absolute;
+
+  	left: 88%;
+
+  	position: relative;
+  	bottom: 90%;
+
+  }
+
+ .addToList-buttons button {
+ 	width: 70px;
+ 	height: 40px;
+ 	margin-bottom: 10px;
+
+
  }
