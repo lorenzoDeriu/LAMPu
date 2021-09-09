@@ -17,7 +17,7 @@ module.exports = {
 		}	
 	},
 
-	create: async function(settings) { //settings: string -•- settings: {"isbn": isbn, "inauthor": author, "intitle": title}
+	create: async function(settings) { //settings: string -•- settings: {"isbn": isbn, "inauthor": author, "intitle": title, "subject": subject}
 		var query;
 
 		if(settings.constructor === Object) query = Query.queryBuilder(new Query.Options(settings)); // advanced search

@@ -1,12 +1,13 @@
 module.exports = { 
 	Options: class {
 		constructor(settings) {
-			if(settings.isbn == null && settings.inauthor == null && settings.intitle == null) 
+			if(settings.isbn == null && settings.inauthor == null && settings.intitle == null && settings.subject == null) 
 				throw new this.MissingInfoError();
 
 			this.isbn = standardizeString(settings.isbn);
 			this.inauthor = standardizeString(settings.inauthor);
 			this.intitle = standardizeString(settings.intitle);
+			this.subject = standardizeString(settings.subject);
 		}
 	},
 
@@ -22,9 +23,11 @@ module.exports = {
 			if(options.inauthor) 
 				query += "inauthor:" + options.inauthor + "+";
 			if(options.intitle) 
-				query += "intitle:" + options.intitle;
+				query += "intitle:" + options.intitle + "+";
+			if(options.subject)
+				query += "subject" + options.subject + "+";
 
-			return query;
+			return query + "maxResult=40";
 		}
 	},
 
