@@ -25,9 +25,9 @@ module.exports = {
 			if(options.intitle) 
 				query += "intitle:" + options.intitle + "+";
 			if(options.subject)
-				query += "subject" + options.subject + "+";
+				query += "subject" + options.subject;
 
-			return query + "maxResult=40";
+			return query + "&maxResult=40";
 		}
 	},
 
