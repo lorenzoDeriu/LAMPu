@@ -15,7 +15,7 @@ module.exports = {
 		if(options == undefined || options == "" || options == " ") throw new this.MissingInfoError();
 
 		if(typeof options == 'string')
-			return 'https://www.googleapis.com/books/v1/volumes?q=' + standardizeString(options);
+			return 'https://www.googleapis.com/books/v1/volumes?q=' + standardizeString(options) + "&maxResults=40";
 		else {
 			var query = 'https://www.googleapis.com/books/v1/volumes?q=';
 			if(options.isbn) 
@@ -26,8 +26,9 @@ module.exports = {
 				query += "intitle:" + options.intitle + "+";
 			if(options.subject)
 				query += "subject" + options.subject;
+			query += "&maxResults=40"
 
-			return query + "&maxResult=40";
+			return query;
 		}
 	},
 

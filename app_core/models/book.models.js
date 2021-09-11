@@ -24,6 +24,7 @@ module.exports = {
 		else query = Query.queryBuilder(settings); // generic search
 
 		response = await Google_Books.getInfo(query);
+		console.log(query);
 		console.log('found books: ' + response.data.length);
 		if(response.err)
 			return response;
